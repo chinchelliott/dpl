@@ -1,0 +1,128 @@
+***GRAMMAR FOR DPL***
+
+-----statements and expressions-----
+
+//starting point is statements
+statements:     statement
+                | statement statements
+
+statement:      expr SEMI
+                | loop
+                | ifStatement
+                | utilStatement
+
+
+expr: primary
+    | primary operator expr
+    | keyword:BALLOUT expr (return statement)
+
+
+primary: primitive
+        | defExpr //aka, defining variables or functions variable usage
+        | idExpr //using variables or calling functions
+        | keyword:lambduh lambdaBody //could be defining or calling
+
+
+
+-----definitions-----
+
+defExpr: varDefintion
+        | functionDefinition
+        | arrDef
+
+varDefintion:   keyword:MAJORKEY IDENTIFIER ASSIGN expr //majorkey i = 0
+                | keyword:MAJORKEY IDENTIFIER
+
+functionDefinition: keyword:RICKROLL IDENTIFIER OPAREN optParams CPAREN block //rickroll = function
+
+arrDef:| keyword:FAM OPARR optArgs CLARR //array, with <> denoting contents
+
+-----calls-----
+
+idExpr: IDENTIFIER
+        | IDENTIFIER ASSIGN expr
+        | functionCall
+
+
+functionCall: IDENTIFIER OPAREN optArgs CPAREN
+
+
+-----loops and conditionals-----
+
+loop: keyword:STAYWOKE OPAREN expr CPAREN block		//while loop
+
+
+ifStatement: keyword:FORREAL OPAREN expr CPAREN block optElse
+
+
+optElse:    *EMPTY*
+            | keyword:ORNAH block
+            | keyword:ORNAH ifStatement
+
+
+-----operators and unaries-----
+
+operators:  keyword:THICC //plus
+            | keyword:ZONKED //minus
+            | keyword:AF //times
+            | keyword:DAB //divide
+            | booleanOp
+
+booleanOp:  keyword:LEGIT //equivalent to equal =
+            | keyword:HARAMBE //equivalent to not equal !=, because nothing will ever be equal to harambe, and harambe is no more
+            | keyword:THIRSTY //equivalent to less than <
+            | keyword:HELLA //equivalent to greater than >
+            | THIRSTY LEGIT // less than or equal <=
+            | HELLA LEGIT // greater than or equal >=
+            | keyword:CHILL //or ||
+            | keyword:HIGHKEY //and &&
+	        | keyword:NAH //negation !
+
+
+primitive: keyword:SUMN //integer
+           | keyword:SWAG //string
+           | keyword:BAKED //null
+           | keyword:TRUUU
+           | keyword:FAKENEWS
+
+
+
+-----anon functions-----
+
+//when the lambda is defined
+lambdaBody: OPAREN optParams CPAREN block lambdaCall SEMI
+
+//and possibily called
+lambdaCall: OPAREN optArgs CPAREN //basically, optional arguments to pass to the lambda such that it will be executed
+            | *EMPTY
+
+
+-----comment and print statements-----
+
+comment: keyword:ME_IRL: STRING SEMI
+
+utilStatements:    comment
+                    | keyword:smh STRING//error message
+                    | keyword:throwshade STRING//print statement
+
+
+-----lists&helpers-----
+
+
+//params are only used in definition to tell what the function can take
+optParams:  *EMPTY*
+            | params
+
+params:     ID
+            | ID COMMA params
+
+optStatements:  *EMPTY*
+                | statement statements
+
+
+block:  OBRACE optStatments CBRACE
+
+//arguments are things that are literally passed into functions
+optArgs: *EMPTY*
+        | expr
+        | expr COMMA optArgs
