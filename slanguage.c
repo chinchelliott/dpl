@@ -21,9 +21,11 @@ int main(int argc,char **argv) {
     //     mylex = lex(fp);
     // }
 
+    printf("Beginning parsing\n");
     Lexeme *myTree = parse(fp);
+    printf("Parsing completed!\n");
 
-
+    displayTree(myTree,"");
 
 return 0;
 }

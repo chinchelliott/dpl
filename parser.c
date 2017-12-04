@@ -47,9 +47,11 @@ Lexeme *block(Parser *p);
 Lexeme *primitive(Parser *p);
 Lexeme *utilStatement(Parser *p);
 Lexeme *operator(Parser *p);
+Lexeme *booleanOp(Parser *p);
 Lexeme *idExpr(Parser *p);
 Lexeme *lambdaBody(Parser *p);
 Lexeme *arrDefinition(Parser *p);
+Lexeme *printStatement(Parser *p);
 
 Lexeme *parse(FILE *fp) {
   // allocate space for parser struct
@@ -236,7 +238,7 @@ Lexeme *statement(Parser *p) {
 
     if (exprPending(p)) {
         a = expr(p);
-        match(p,SEMI);
+        match(p,SEMI); //might need to change this back? not sure
     }
     else if (loopPending(p)) return loop(p);
     else if (ifStatementPending(p)) return ifStatement(p);
@@ -245,7 +247,7 @@ Lexeme *statement(Parser *p) {
     return a;
 }
 
-// expr: primary
+// expr: primary SEMI (just added semi, so expr always has semi)
 //     | primary operator expr
 //     | keyword:BALLOUT expr (return statement)
 Lexeme *expr(Parser *p) {
@@ -259,6 +261,7 @@ Lexeme *expr(Parser *p) {
             b->right = c;
             return b;
         }
+        //match(p,SEMI); //or advance? not sure
         return a;
     }
     else {
@@ -310,15 +313,16 @@ Lexeme *varDefinition(Parser *p) {
 // functionDefinition: keyword:RICKROLL IDENTIFIER OPAREN optParams CPAREN block //rickroll = function
 Lexeme *functionDefinition(Parser *p) {
     Lexeme *a = match(p,FUNCTION);
-    if (check(p, ID)) {
+    //if (check(p, ID)) {
         a->left = match(p, ID);
-    }
+    //}
     advance(p);
     Lexeme *b = lexeme(NIL);
     if (paramsPending(p)) b = optParams(p);
     advance(p);
     Lexeme *c = block(p);
-    a->right = cons(GLUE, b, c);
+    //TODO function's lambda here
+    a->right = cons(LAMBDA, b, c);
     return a;
 }
 
@@ -336,14 +340,17 @@ Lexeme *optParams(Parser *p) {
 
 // functionCall: IDENTIFIER OPAREN optArgs CPAREN
 //               | keyword:lambduh lambdaCall
+//TODO: not using this right now, functioncall handled within idexpr and lambdabody
 Lexeme *functionCall(Parser *p) {
     Lexeme *a = match(p, ID);
     Lexeme *b = lexeme(NIL);
-    advance(p);
+    //advance(p);
+    match(p,OPAREN);
     if (exprPending(p)) {
         b = optArgs(p);
     }
-    advance(p);
+    //advance(p);
+    match(p, CPAREN);
     return cons(FUNCALL, b, a);
 }
 
@@ -398,10 +405,10 @@ Lexeme *elseStatement(Parser *p) {
 // comment: keyword:ME_IRL: STRING SEMI
 Lexeme *comment(Parser *p) {
     Lexeme *a = match(p,COMMENT);
-    advance(p);
-    advance(p);
-    // match(p,STRING);
-    // match(p,SEMI);
+    // advance(p);
+    // advance(p);
+    match(p,STRING);
+    match(p,SEMI);
     return a;
 }
 
@@ -428,24 +435,92 @@ Lexeme *operator(Parser *p) {
 }
 
 Lexeme *booleanOp(Parser *p) {
-    return check(p, EQ) || check(p, NEQ) || check(p, NEG) || check(p, LESS_THAN) || check(p, GREATER_THAN) || check(p, OR) || check(p, AND);
-    if (check(p,EQ)) return match()
+    if (check(p,EQ)) return match(p, EQ);
+    else if (check(p, NEQ)) return match(p, NEQ);
+    else if (check(p, NEG)) return match(p, NEG);
+    else if (check(p, LESS_THAN)) return match(p, LESS_THAN);
+    else if (check(p, GREATER_THAN)) return match(p, GREATER_THAN);
+    else if (check(p, OR)) return match(p, OR);
+    else return match(p, AND);
 }
 
+// idExpr: IDENTIFIER
+//         | IDENTIFIER ASSIGN expr
+//         | functionCall
+//         | IDENTIFIER OBRACKET expr CBRACKET //going into arrays?
 Lexeme *idExpr(Parser *p) {
-    //TODO
+    Lexeme *a = match(p, ID);
+    Lexeme *b = NULL;
+    //redefinition of variable
+    if (check(p,ASSIGN)) {
+        match(p,ASSIGN);
+        b = expr(p);
+        return cons(VAR, a, b);
+    }
+    //indexing into array, or array call
+    if (check(p,OBRACKET)) {
+        match(p,OBRACKET);
+        b = expr(p);
+        match(p,CBRACKET);
+        return cons(ARRAYCALL, a, b);
+    }
+    //function call
+    if (check(p,OPAREN)) {
+        match(p,OPAREN);
+        if (exprPending(p)) {
+            b = optArgs(p);
+        }
+        match(p, CPAREN);
+        return cons(FUNCALL, b, a);
+    }
+    return a;
 }
 
+//lambdaBody: OPAREN optParams CPAREN block lambdaCall
 Lexeme *lambdaBody(Parser *p) {
     //TODO
+    Lexeme *a = match(p, LAMBDA);
+    Lexeme *b = NULL;
+    //Lexeme *c = lexeme(FUNCTION);
+    //c->left = lexeme(NIL);
+
+    match(p, OPAREN);
+    if (paramsPending(p)) {
+        a->left = optParams(p);
+    }
+    match(p, CPAREN);
+    a->right = block(p);
+
+    if (check(p,OPAREN)) {
+        match(p,OPAREN);
+        b = optArgs(p);
+        match(p, CPAREN);
+        return cons(FUNCALL, b, a);
+    }
+
+    return a;
 }
 
+// arrDef:| keyword:FAM IDENTIFIER OPARR optArgs CLARR //array, with <> denoting contents
+//         | FAM size oparen int cparen //need size function?
 Lexeme *arrDefinition(Parser *p) {
-    //TODO
+    //TODO need size constructor for arrays
+    Lexeme *a = match(p, ARRAY);
+    a->left = match(p, ID);
+    match(p,OPARR);
+    match(p,CLARR);
+    //Lexeme *c = NULL;
+    if (exprPending(p)) {
+        a->right = optArgs(p);
+    }
+    return a;
 }
 
 Lexeme *printStatement(Parser *p) {
-    //TODO
+    Lexeme *a = match(p,PRINT);
+    match(p, STRING);
+    match(p, SEMI);
+    return a;
 }
 
 // primitive: keyword:SUMN //integer

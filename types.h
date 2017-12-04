@@ -12,6 +12,8 @@ extern char *OBRACE;
 extern char *CBRACE;
 extern char *OPARR;
 extern char *CLARR;
+extern char *OBRACKET;
+extern char *CBRACKET;
 extern char *END_OF_FILE;
 
 
@@ -54,6 +56,7 @@ extern char *IFLIST;
 extern char *GLUE;
 extern char *WHILELIST;
 extern char *FUNCALL;
+extern char *ARRAYCALL;
 
 
 

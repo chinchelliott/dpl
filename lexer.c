@@ -62,6 +62,10 @@ Lexeme *lex(FILE *fp) {
                 return lexeme(OPARR);
             case '>':
                 return lexeme(CLARR);
+            case '[':
+                return lexeme(OBRACKET);
+            case ']':
+                return lexeme(CBRACKET);
 
             default:
                 // multi-character tokens

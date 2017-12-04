@@ -12,7 +12,7 @@ statement:      expr SEMI
                 | utilStatement
 
 
-expr: primary
+expr: primary SEMI
     | primary operator expr
     | keyword:BALLOUT expr (return statement)
 
@@ -36,6 +36,7 @@ varDefintion:   keyword:MAJORKEY IDENTIFIER ASSIGN expr //majorkey i = 0
 functionDefinition: keyword:RICKROLL IDENTIFIER OPAREN optParams CPAREN block //rickroll = function
 
 arrDef:| keyword:FAM IDENTIFIER OPARR optArgs CLARR //array, with <> denoting contents
+        | FAM size oparen int cparen //need size function?
 
 -----calls-----
 
@@ -91,7 +92,7 @@ primitive: keyword:SUMN //integer
 -----anon functions-----
 
 //when the lambda is defined
-lambdaBody: OPAREN optParams CPAREN block lambdaCall SEMI
+lambdaBody: OPAREN optParams CPAREN block lambdaCall
 
 //and possibily called
 lambdaCall: OPAREN optArgs CPAREN //basically, optional arguments to pass to the lambda such that it will be executed

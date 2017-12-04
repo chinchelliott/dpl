@@ -10,6 +10,8 @@ char *OBRACE = "OBRACE";
 char *CBRACE = "CBRACE";
 char *OPARR = "OPARR";
 char *CLARR = "OPARR";
+char *OBRACKET = "OBRACKET";
+char *CBRACKET = "CBRACKET";
 char *END_OF_FILE = "END_OF_FILE";
 
 
@@ -52,3 +54,4 @@ char *IFLIST = "IFLIST";
 char *GLUE = "GLUE";
 char *WHILELIST = "WHILELIST";
 char *FUNCALL = "FUNCALL";
+char *ARRAYCALL = "ARRAYCALL";
