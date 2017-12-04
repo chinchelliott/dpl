@@ -211,7 +211,7 @@ Lexeme *lexVar(char c,FILE *fp) {
       else if(!strcmp(name,"fakenews")) {
         new->type = F;
       }
-      else if(!strcmp(name,"ME_IRL")) {
+      else if(!strcmp(name,"MEIRL")) {
         new->type = COMMENT;
       }
       else {

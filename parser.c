@@ -222,8 +222,10 @@ int commaPending(Parser *p) {
 //                 | statement statements
 Lexeme *statements(Parser *p) {
     Lexeme *a,*b = NULL;
+    printf("processed first statement\n");
     a = statement(p);
     if (statementsPending(p)) {
+        printf("processing more statements\n");
         b = statements(p);
     }
     return cons(STATEMENTLIST,a,b);
@@ -236,13 +238,18 @@ Lexeme *statements(Parser *p) {
 Lexeme *statement(Parser *p) {
     Lexeme *a = NULL;
 
-    if (exprPending(p)) {
-        a = expr(p);
-        match(p,SEMI); //might need to change this back? not sure
-    }
-    else if (loopPending(p)) return loop(p);
+    // if (exprPending(p)) {
+    //     a = expr(p);
+    //     match(p,SEMI);
+    //     return a; //might need to change this back? not sure
+    // }
+    if (loopPending(p)) return loop(p);
     else if (ifStatementPending(p)) return ifStatement(p);
     else if (utilPending(p)) return utilStatement(p);
+    else {
+        a = expr(p);
+        match(p,SEMI);
+    }
 
     return a;
 }
@@ -251,7 +258,7 @@ Lexeme *statement(Parser *p) {
 //     | primary operator expr
 //     | keyword:BALLOUT expr (return statement)
 Lexeme *expr(Parser *p) {
-    Lexeme *a, *b, *c;
+    Lexeme *a, *b, *c = NULL;
     if (primaryPending(p)) {
         a = primary(p);
         if(operatorPending(p)) {
@@ -275,6 +282,7 @@ Lexeme *expr(Parser *p) {
 //         | idExpr //using variables or calling functions
 //         | keyword:lambduh lambdaBody //could be defining or calling
 Lexeme *primary(Parser *p) {
+    printf("in primary\n");
     if (primitivePending(p)) return primitive(p);
     else if (defExprPending(p)) return defExpr(p);
     else if (idExprPending(p)) return idExpr(p);
@@ -288,6 +296,7 @@ Lexeme *primary(Parser *p) {
 //         | functionDefinition
 //         | arrDef
 Lexeme *defExpr(Parser *p) {
+    printf("in defintion expression\n");
     if (varDefPending(p)) return varDefinition(p);
     else if (functionDefPending(p)) return functionDefinition(p);
     else return arrDefinition(p);
@@ -297,15 +306,16 @@ Lexeme *defExpr(Parser *p) {
 // varDefintion:   keyword:MAJORKEY IDENTIFIER ASSIGN expr  //majorkey = var
 //                 | keyword:MAJORKEY IDENTIFIER
 Lexeme *varDefinition(Parser *p) {
+    printf("in variable definition");
     Lexeme *a = match(p,VAR);
     a->left = match(p,ID);
     if (assignmentPending(p)) {
         advance(p);
         a->right = expr(p);
     }
-    else {
-        a->right = lexeme(NIL);
-    }
+    // else {
+    //     a->right = lexeme(NIL);
+    // } SHOULDNT NEED THIS
     return a;
 }
 
@@ -317,7 +327,7 @@ Lexeme *functionDefinition(Parser *p) {
         a->left = match(p, ID);
     //}
     advance(p);
-    Lexeme *b = lexeme(NIL);
+    Lexeme *b = NULL; //changed from LEXEME(NIL)
     if (paramsPending(p)) b = optParams(p);
     advance(p);
     Lexeme *c = block(p);
@@ -330,8 +340,8 @@ Lexeme *functionDefinition(Parser *p) {
 //             | params
 Lexeme *optParams(Parser *p) {
     Lexeme *a = match(p, ID);
-    a->left = lexeme(NIL);
-    a->right = lexeme(NIL);
+    a->left = NULL; //changed from lexeme(NIL)
+    a->right = NULL; //changed from lexeme(NIL)
     if (commaPending(p)) {
         a->right = optParams(p);
     }
@@ -343,7 +353,7 @@ Lexeme *optParams(Parser *p) {
 //TODO: not using this right now, functioncall handled within idexpr and lambdabody
 Lexeme *functionCall(Parser *p) {
     Lexeme *a = match(p, ID);
-    Lexeme *b = lexeme(NIL);
+    Lexeme *b = NULL; //changed from lexeme(NIL)
     //advance(p);
     match(p,OPAREN);
     if (exprPending(p)) {
@@ -356,8 +366,8 @@ Lexeme *functionCall(Parser *p) {
 
 Lexeme *optArgs(Parser *p) {
     Lexeme *a = expr(p);
-    a->left = lexeme(NIL);
-    a->right = lexeme(NIL);
+    a->left = NULL; //changed from lexeme(NIL)
+    a->right = NULL; //changed from lexeme(NIL)
     if (check(p, COMMA)) {
         a->right = optArgs(p);
     }
@@ -388,7 +398,7 @@ Lexeme *ifStatement(Parser *p) {
         c = elseStatement(p);
     }
     else {
-        c = lexeme(NIL);
+        c = NULL; //changed from lexeme(NIL)
     }
     a-> right = cons(IFLIST, b, c);
 
@@ -398,29 +408,21 @@ Lexeme *ifStatement(Parser *p) {
 Lexeme *elseStatement(Parser *p) {
     Lexeme *a = match(p,ELSE);
     a->left = block(p);
-    a->right = lexeme(NIL);
-    return a;
-}
-
-// comment: keyword:ME_IRL: STRING SEMI
-Lexeme *comment(Parser *p) {
-    Lexeme *a = match(p,COMMENT);
-    // advance(p);
-    // advance(p);
-    match(p,STRING);
-    match(p,SEMI);
+    a->right = NULL; //changed from lexeme(NIL)
     return a;
 }
 
 Lexeme *block(Parser *p) {
     if (statementsPending(p)) return statements(p);
-    return lexeme(NIL);
+    return NULL; //changed from lexeme(NIL)
 }
 
 Lexeme *utilStatement(Parser *p) {
     if (check(p, COMMENT)) return comment(p);
-    else if (check(p,PRINT)) return printStatement(p);
-    else return match(p, NULL);
+    else {
+        return printStatement(p);
+    }
+    // else return match(p, NULL);
 }
 
 Lexeme *operator(Parser *p) {
@@ -449,12 +451,14 @@ Lexeme *booleanOp(Parser *p) {
 //         | functionCall
 //         | IDENTIFIER OBRACKET expr CBRACKET //going into arrays?
 Lexeme *idExpr(Parser *p) {
+    printf("in id expression\n");
     Lexeme *a = match(p, ID);
     Lexeme *b = NULL;
     //redefinition of variable
     if (check(p,ASSIGN)) {
         match(p,ASSIGN);
         b = expr(p);
+        printf("redefinition of a variable called %s to %s\n", displayLexeme(*a), displayLexeme(*b));
         return cons(VAR, a, b);
     }
     //indexing into array, or array call
@@ -523,6 +527,19 @@ Lexeme *printStatement(Parser *p) {
     return a;
 }
 
+// comment: keyword:ME_IRL: STRING SEMI
+Lexeme *comment(Parser *p) {
+    Lexeme *a = match(p,COMMENT);
+    // advance(p);
+    // advance(p);
+    // match(p,STRING);
+    while (!check(p,SEMI)) {
+        advance(p);
+    }
+    match(p,SEMI);
+    return a;
+}
+
 // primitive: keyword:SUMN //integer
 //            | keyword:SWAG //string
 //            | keyword:BAKED //null
@@ -532,6 +549,7 @@ Lexeme *printStatement(Parser *p) {
 //            | IDENTIFIER
 //            | keyword:LAMBDUH lambdaBody
 Lexeme *primitive(Parser *p) {
+    printf("in primitive expression\n");
     if (check(p, INTEGER)) return match(p,INTEGER);
     else if (check(p, STRING)) return match(p,STRING);
     //TODO may need to have array function though

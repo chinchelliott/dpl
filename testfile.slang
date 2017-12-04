@@ -1,3 +1,3 @@
-majorkey zeta;
-zeta = 5;
 throwshade "zeta is";
+zeta = 5;
+MEIRL "majorkey zeta";

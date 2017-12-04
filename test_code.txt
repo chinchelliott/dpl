@@ -31,6 +31,12 @@ rickroll testFunction (x) {
 
 
 
+THIS CAUSES SEGFAULT ->
+throwshade "zeta is";
+zeta = 5;
+MEIRL "majorkey zeta";
+
+
 
 
 
