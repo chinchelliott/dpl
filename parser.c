@@ -221,7 +221,7 @@ int commaPending(Parser *p) {
 // statements:     statement
 //                 | statement statements
 Lexeme *statements(Parser *p) {
-    Lexeme *a,*b = NULL;
+    Lexeme *a,*b = lexeme(NIL); //CHANGED FROM NULL
     printf("processed first statement\n");
     a = statement(p);
     if (statementsPending(p)) {
@@ -453,7 +453,7 @@ Lexeme *booleanOp(Parser *p) {
 Lexeme *idExpr(Parser *p) {
     printf("in id expression\n");
     Lexeme *a = match(p, ID);
-    Lexeme *b = NULL;
+    Lexeme *b = lexeme(NIL); //changed from null
     //redefinition of variable
     if (check(p,ASSIGN)) {
         match(p,ASSIGN);

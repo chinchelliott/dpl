@@ -305,7 +305,7 @@ Lexeme *lexString(char c, FILE *fp) {
       // }
   // }
 char *displayLexeme(Lexeme l) {
-    char *string = malloc(sizeof(char) * 64);
+    char *string = malloc(sizeof(char) * 100);
     if(l.type == INTEGER) {
         sprintf(string,"%s %d",l.type,l.ival);
     }
@@ -313,6 +313,7 @@ char *displayLexeme(Lexeme l) {
         sprintf(string,"%s %s",l.type,l.sval);
     }
     else {
+        //printf("attempting to print\n");
         sprintf(string,"%s",l.type);
     }
     return string;
