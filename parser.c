@@ -222,6 +222,7 @@ int commaPending(Parser *p) {
 //                 | statement statements
 Lexeme *statements(Parser *p) {
     Lexeme *a,*b = lexeme(NIL); //CHANGED FROM NULL
+    //NOTE make sure to never cons NULL with something, must be lexeme(NIL)
     printf("processed first statement\n");
     a = statement(p);
     if (statementsPending(p)) {
