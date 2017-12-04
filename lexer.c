@@ -290,15 +290,28 @@ Lexeme *lexString(char c, FILE *fp) {
 
 //-------DISPLAY FUNCTION-------//
 
-void display(Lexeme *l) {
+// void display(Lexeme *l) {
     //char *displayLexeme(Lexeme l) {
     //   char *string = malloc(sizeof(char) * 64);
-      if(l->type == INTEGER) {
-        printf("%s %d",l->type,l->ival);
-      }
-      else {
-        printf("%s %s",l->type, l->sval);
-      }
+      // if(l->type == INTEGER) {
+      //   printf("%s %d",l->type,l->ival);
+      // }
+      // else {
+      //   printf("%s %s",l->type, l->sval);
+      // }
+  // }
+char *displayLexeme(Lexeme l) {
+    char *string = malloc(sizeof(char) * 64);
+    if(l.type == INTEGER) {
+        sprintf(string,"%s %d",l.type,l.ival);
+    }
+    else if(l.type == STRING || l.type == ID || l.type == BAD_LEX) {
+        sprintf(string,"%s %s",l.type,l.sval);
+    }
+    else {
+        sprintf(string,"%s",l.type);
+    }
+    return string;
 }
 
 

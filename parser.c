@@ -13,12 +13,43 @@ int typeEqual(struct lexeme *x,struct lexeme *y);
 int statementsPending(Parser *p);
 int statementPending(Parser *p);
 int varDefPending(Parser *p);
-int functionDefinitionPending(Parser *p);
+int functionDefPending(Parser *p);
 int functionCallPending(Parser *p);
 int exprPending(Parser *p);
 int primitivePending(Parser *p);
 int loopPending(Parser *p);
 int ifStatementPending(Parser *p);
+int primaryPending(Parser *p);
+int defExprPending(Parser *p);
+int idExprPending(Parser *p);
+int arrDefPending(Parser *p);
+int booleanOpPending(Parser *p);
+int utilPending(Parser *p);
+
+
+
+//lexeme functions
+Lexeme *statements(Parser *p);
+Lexeme *statement(Parser *p);
+Lexeme *expr(Parser *p);
+Lexeme *primary(Parser *p);
+Lexeme *defExpr(Parser *p);
+Lexeme *varDefinition(Parser *p);
+Lexeme *functionDefinition(Parser *p);
+Lexeme *functionCall(Parser *p);
+Lexeme *optParams(Parser *p);
+Lexeme *optArgs(Parser *p);
+Lexeme *loop(Parser *p);
+Lexeme *ifStatement(Parser *p);
+Lexeme *elseStatement(Parser *p);
+Lexeme *comment(Parser *p);
+Lexeme *block(Parser *p);
+Lexeme *primitive(Parser *p);
+Lexeme *utilStatement(Parser *p);
+Lexeme *operator(Parser *p);
+Lexeme *idExpr(Parser *p);
+Lexeme *lambdaBody(Parser *p);
+Lexeme *arrDefinition(Parser *p);
 
 Lexeme *parse(FILE *fp) {
   // allocate space for parser struct
@@ -48,6 +79,8 @@ Lexeme *parse(FILE *fp) {
     tree = statements(p);
   }
 
+  return tree;
+
 }
 
 //--------LEXICAL HELPER FUNCTIONS--------//
@@ -76,8 +109,8 @@ void matchNoAdvance(Parser *p, char *t) {
   if(!check(p,t)) {
     printf("illegal\n");
     fprintf(stderr,"Syntax error\n");
-    fprintf(stderr,"Expected type %s, found %s at line %d\n",t,displayLexeme(p->pending),p->line);
-    fprintf(stderr,"Previous type %s\n",display(p->previous));
+    fprintf(stderr,"Expected type %s, found %s at line %d\n",t,displayLexeme(*(p->pending)),p->line);
+    fprintf(stderr,"Previous type %s\n",displayLexeme(*(p->previous)));
     exit(1);
   }
 }
@@ -87,10 +120,16 @@ int typeEqual(struct lexeme *x,struct lexeme *y) {
     return 0;
 }
 
-// void displayTree(struct lexeme *,char *) {
-//     //NOT YET IMPLEMENTED
-//     return;
-// }
+void displayTree(Lexeme *tree, char *head) {
+    if(tree != NULL) {
+        char *newHead = malloc(sizeof(char) * 1024);
+        strcat(newHead,head);
+        strcat(newHead,"\t");
+        displayTree(tree->left,newHead);
+        printf("%s%s\n",head,displayLexeme(*tree));
+        displayTree(tree->right,newHead);
+    }
+}
 
 
 //--------PENDING FUNCTIONS--------//
@@ -144,7 +183,7 @@ int ifStatementPending(Parser *p) {
 }
 
 int utilPending(Parser *p) {
-    check(p, COMMENT) || check(p, ERROR) || check(p, PRINT);
+    return check(p, COMMENT) || check(p, ERROR) || check(p, PRINT);
 }
 
 int primitivePending(Parser *p) {
@@ -166,13 +205,21 @@ int booleanOpPending(Parser *p) {
 int elsePending(Parser *p) {
     return check(p, ELSE);
 }
+
+int paramsPending(Parser *p) {
+    return check(p, ID);
+}
+
+int commaPending(Parser *p) {
+    return check(p, COMMA);
+}
 //--------RECOGNIZING FUNCTIONS--------//
 
 
 // statements:     statement
 //                 | statement statements
 Lexeme *statements(Parser *p) {
-    Lexeme *a,b = NULL;
+    Lexeme *a,*b = NULL;
     a = statement(p);
     if (statementsPending(p)) {
         b = statements(p);
@@ -207,7 +254,7 @@ Lexeme *expr(Parser *p) {
         a = primary(p);
         if(operatorPending(p)) {
             b = operator(p);
-            c = expression(p);
+            c = expr(p);
             b->left = a;
             b->right = c;
             return b;
@@ -238,9 +285,9 @@ Lexeme *primary(Parser *p) {
 //         | functionDefinition
 //         | arrDef
 Lexeme *defExpr(Parser *p) {
-    if (varDefPending(p)) return varDefintion(p);
+    if (varDefPending(p)) return varDefinition(p);
     else if (functionDefPending(p)) return functionDefinition(p);
-    else return arrDef(p);
+    else return arrDefinition(p);
 }
 
 
@@ -263,11 +310,12 @@ Lexeme *varDefinition(Parser *p) {
 // functionDefinition: keyword:RICKROLL IDENTIFIER OPAREN optParams CPAREN block //rickroll = function
 Lexeme *functionDefinition(Parser *p) {
     Lexeme *a = match(p,FUNCTION);
-    if (check(ID)) }
+    if (check(p, ID)) {
         a->left = match(p, ID);
     }
     advance(p);
-    Lexeme *b = optParams(p);
+    Lexeme *b = lexeme(NIL);
+    if (paramsPending(p)) b = optParams(p);
     advance(p);
     Lexeme *c = block(p);
     a->right = cons(GLUE, b, c);
@@ -277,45 +325,47 @@ Lexeme *functionDefinition(Parser *p) {
 // optParams:  *EMPTY*
 //             | params
 Lexeme *optParams(Parser *p) {
-    Lexeme *a = NULL;
-    if (check(ID)) {
-
+    Lexeme *a = match(p, ID);
+    a->left = lexeme(NIL);
+    a->right = lexeme(NIL);
+    if (commaPending(p)) {
+        a->right = optParams(p);
     }
-
-
+    return a;
 }
 
-// functionCall: IDENTIFIER OPAREN optParams CPAREN
+// functionCall: IDENTIFIER OPAREN optArgs CPAREN
 //               | keyword:lambduh lambdaCall
 Lexeme *functionCall(Parser *p) {
-    if (check(IDENTIFIER)) {
-        advance(p);
-        match(p,OPAREN);
-        optParams(p);
-        match(p,CPAREN);
+    Lexeme *a = match(p, ID);
+    Lexeme *b = lexeme(NIL);
+    advance(p);
+    if (exprPending(p)) {
+        b = optArgs(p);
     }
-    // else {
-    //     match(LAMBDA);
-    //     lambdaCall(p);
-    // }
+    advance(p);
+    return cons(FUNCALL, b, a);
+}
+
+Lexeme *optArgs(Parser *p) {
+    Lexeme *a = expr(p);
+    a->left = lexeme(NIL);
+    a->right = lexeme(NIL);
+    if (check(p, COMMA)) {
+        a->right = optArgs(p);
+    }
+    return a;
 }
 
 
 // loop:           keyword:STAYWOKE OPAREN expr CPAREN block		//while loop
 Lexeme *loop(Parser *p) {
     Lexeme *a = match(p,WHILE);
-    Lexeme *b = match(p,OPAREN);
+    advance(p);
     a->left = expr(p);
-    b = match(p,CPAREN);
+    advance(p);
     a->right = block(p);
-
-    //match(WHILE);
-    // else {
-    //     match(FOR);
-    //     match(ID);
-    //     match(OPAREN);
-    //     match
-    // }
+    return a;
 }
 
 // ifStatement: keyword:FORREAL OPAREN expr CPAREN block optElse
@@ -339,14 +389,20 @@ Lexeme *ifStatement(Parser *p) {
 }
 
 Lexeme *elseStatement(Parser *p) {
-  return block(p);
+    Lexeme *a = match(p,ELSE);
+    a->left = block(p);
+    a->right = lexeme(NIL);
+    return a;
 }
 
 // comment: keyword:ME_IRL: STRING SEMI
 Lexeme *comment(Parser *p) {
-    match(p,COMMENT);
-    match(p,STRING);
-    match(p,SEMI);
+    Lexeme *a = match(p,COMMENT);
+    advance(p);
+    advance(p);
+    // match(p,STRING);
+    // match(p,SEMI);
+    return a;
 }
 
 Lexeme *block(Parser *p) {
@@ -354,6 +410,43 @@ Lexeme *block(Parser *p) {
     return lexeme(NIL);
 }
 
+Lexeme *utilStatement(Parser *p) {
+    if (check(p, COMMENT)) return comment(p);
+    else if (check(p,PRINT)) return printStatement(p);
+    else return match(p, NULL);
+}
+
+Lexeme *operator(Parser *p) {
+    //TODO
+    if (check(p, PLUS)) return match(p, PLUS);
+    else if (check(p, MINUS)) return match(p, MINUS);
+    else if (check(p, TIMES)) return match(p, TIMES);
+    else if (check(p, DIVIDE)) return match(p, DIVIDE);
+    else {
+        return booleanOp(p);
+    }
+}
+
+Lexeme *booleanOp(Parser *p) {
+    return check(p, EQ) || check(p, NEQ) || check(p, NEG) || check(p, LESS_THAN) || check(p, GREATER_THAN) || check(p, OR) || check(p, AND);
+    if (check(p,EQ)) return match()
+}
+
+Lexeme *idExpr(Parser *p) {
+    //TODO
+}
+
+Lexeme *lambdaBody(Parser *p) {
+    //TODO
+}
+
+Lexeme *arrDefinition(Parser *p) {
+    //TODO
+}
+
+Lexeme *printStatement(Parser *p) {
+    //TODO
+}
 
 // primitive: keyword:SUMN //integer
 //            | keyword:SWAG //string
@@ -364,21 +457,18 @@ Lexeme *block(Parser *p) {
 //            | IDENTIFIER
 //            | keyword:LAMBDUH lambdaBody
 Lexeme *primitive(Parser *p) {
-    if (check(INTEGER)) return match(p,INTEGER);
-    else if (check(STRING)) return match(p,STRING);
-    //may need to have array function though
-    else if (check(ARRAY)) return match(p,ARRAY);
-    else if (check(T)) return match(p,T);
-    else if (check(F)) return match(p,F);
-    else if (check(BAKED)) return match(p,BAKED);
-    else if (check(ID)) return match(p,ID);
-    //as well as lambda function
-    else if (check(LAMBDA)) return match(p,LAMBDA);
-
-
-
-    {
-        return p->current;
-    }
-    else match(p,NULL);
+    if (check(p, INTEGER)) return match(p,INTEGER);
+    else if (check(p, STRING)) return match(p,STRING);
+    //TODO may need to have array function though
+    //else if (check(ARRAY)) return match(p,ARRAY);
+    else if (check(p, T)) return match(p,T);
+    else if (check(p, F)) return match(p,F);
+    else if (check(p, NIL)) return match(p,NIL);
+    else if (check(p, ID)) return match(p,ID);
+    //TODO as well as lambda function
+    //else if (check(LAMBDA)) return match(p,LAMBDA);
+    // {
+    //     return p->current;
+    // }
+    else return match(p,NULL);
 }

@@ -1,5 +1,5 @@
 #include "lexer.h"
-
+#include "parser.h"
 
 int main(int argc,char **argv) {
 
@@ -11,15 +11,17 @@ int main(int argc,char **argv) {
 
     FILE *fp = fopen(argv[1], "r");
 
-    Lexeme *mylex;
+    // Lexeme *mylex;
+    //
+    // mylex = lex(fp);
+    //
+    // while (strcmp(mylex->type,"END_OF_FILE")) {
+    //     display(mylex);
+    //     printf("\n");
+    //     mylex = lex(fp);
+    // }
 
-    mylex = lex(fp);
-
-    while (strcmp(mylex->type,"END_OF_FILE")) {
-        display(mylex);
-        printf("\n");
-        mylex = lex(fp);
-    }
+    Lexeme *myTree = parse(fp);
 
 
 

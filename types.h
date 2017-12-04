@@ -53,6 +53,7 @@ extern char *STATEMENTLIST;
 extern char *IFLIST;
 extern char *GLUE;
 extern char *WHILELIST;
+extern char *FUNCALL;
 
 
 
