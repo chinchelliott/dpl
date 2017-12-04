@@ -51,7 +51,7 @@ extern char *BAD_LEX;
 //GLUE
 extern char *STATEMENTLIST;
 extern char *IFLIST;
-extern char *JOINTREE;
+extern char *GLUE;
 extern char *WHILELIST;
 
 

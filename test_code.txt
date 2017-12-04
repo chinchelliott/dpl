@@ -1,0 +1,176 @@
+ME_IRL:comment
+ME_IRL: sample code
+
+
+ME_IRL: variable declarations
+majorkey testVariable = 20;
+
+ME_IRL : functions
+
+rickroll testFunction (testVariable) {
+  throwshade ("this is my testVariable" testVariable "\n");
+  ballout (+ testVariable 1);
+}
+
+ME_IRL: anon functions this should return the last statement executed
+lambduh (x) { + x 1} ;
+
+lamduh () { + 6 1} (x);
+
+
+
+ME_IRL: loops and iterations
+staywoke (i < j) {
+    i = i +1;
+}
+
+rickroll testFunction (x) {
+    x = x+1;
+    ballout testFunction(x);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ME_IRL: arrays
+FAM myarr< 1, 2, 3, 4, 5>
+myarr[0]
+
+
+
+
+
+define size as 10
+define array a as [1 2 3 4 5]
+define array b as allocate(size)  ME_IRL:how to do this?
+ME_IRL:dynamically allocate size array?
+floop((define temp as 0) (< x length(a)) (++temp)) {
+    display a[temp]
+}
+
+ME_IRL: conditionals
+$**************************
+* asas x1 x2
+* < x1 x2
+* > x1 x2
+* <= x1 x2
+* >= x1 x2
+* and(x1 x2)
+* or(x1 x2)
+* not(x1)
+* !as x
+* abs(x1)
+*
+* if something is nil
+**************************$
+if (asas a[0] 1)
+  display "a[0] is 1"
+elseif (<= a[0] 2)
+  display "a[0] is <= 1"
+elseif (> a[0] -1)
+  display "a[0] is > -1"
+elseif (and(asas a[0] 1 asas b[0] 1))
+  display "a[0] and b[0] are both 1"
+elseif (or(> a[0] 1 > b[0] 1))
+  display "a[0] or b[0] is greater than 1"
+elseif(not(< a[0] 1))
+  display "a[0] is not < 1"
+elseif(!as a[0] b[0])
+  display "a[0] is not = to b[0]"
+elseif(true)
+  display "true keyword"
+elseif(not(false))
+  display "false keyword"
+elseif(true)
+  abs(x1)
+else
+  nil
+
+
+ME_IRL: functions
+
+define square(x)  {
+  result (* x x)
+}
+
+define list l as (1 2 3)
+
+ME_IRL: (define (map proc items)
+ME_IRL:    (if (null? items)
+ME_IRL:      nil
+ME_IRL:      (cons (proc (car items)) (map (proc (cdr items))))))
+
+$ map (lambda (x) (sscale S x)) @
+
+define map(func list) {
+  if(not (list))
+    nil
+  else
+    cons(f(car(list)) map(f cdr(1)))
+}
+
+
+define plus4 (x)  {
+result (+ x 4)
+}
+
+ME_IRL:equivalent to
+
+define plus4  {
+  lambda (x)  {
+    result (+ x 4)
+  }
+}
+ME_IRL: need to do lambda
+ME_IRL:function that returns a function
+ME_IRL: dispatch
+
+
+
+ME_IRL: lists
+ME_IRL: cons()
+ME_IRL: car()
+ME_IRL: cdr()
+
+ME_IRL: streams
+ME_IRL: scons()
+ME_IRL: scar()
+ME_IRL: scdr()
+ME_IRL: delay()
+ME_IRL: force()
+
+real(arg) - coerces the numerical argument to type real
+integer(arg) - coerces the numerical argument to type integer
+display_env(arg) - displays the given environment
+  To get the current environment, use the keyword this.
+is_uninitialized(arg) - returns true if variable arg is UNINITIALIZED, false otherwise
+is_array(arg) - returns true if arg is an array object, false otherwise
+is_closure(arg) - returns true if arg is a closure object, false otherwise
+is_boolean(arg) - returns true if arg is a boolean object, false otherwise
+is_pair(arg) - returns true if arg is a pair, false otherwise
+is_list(arg) - returns true if arg is a list object, false otherwise
+is_nil(arg) - returns true if arg is nil, false otherwise
+is_string(arg) - returns true if arg is a string, false otherwise
+is_integer(arg) - returns true if arg is a integer number, false otherwise
+is_real(arg) - returns true if arg is a real number, false otherwise
+is_return(arg) - returns true if arg is a return object, false otherwise

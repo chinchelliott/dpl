@@ -35,13 +35,14 @@ varDefintion:   keyword:MAJORKEY IDENTIFIER ASSIGN expr //majorkey i = 0
 
 functionDefinition: keyword:RICKROLL IDENTIFIER OPAREN optParams CPAREN block //rickroll = function
 
-arrDef:| keyword:FAM OPARR optArgs CLARR //array, with <> denoting contents
+arrDef:| keyword:FAM IDENTIFIER OPARR optArgs CLARR //array, with <> denoting contents
 
 -----calls-----
 
 idExpr: IDENTIFIER
         | IDENTIFIER ASSIGN expr
         | functionCall
+        | IDENTIFIER OBRACKET expr CBRACKET //going into arrays?
 
 
 functionCall: IDENTIFIER OPAREN optArgs CPAREN
@@ -102,8 +103,8 @@ lambdaCall: OPAREN optArgs CPAREN //basically, optional arguments to pass to the
 comment: keyword:ME_IRL: STRING SEMI
 
 utilStatements:    comment
-                    | keyword:smh STRING//error message
-                    | keyword:throwshade STRING//print statement
+                    | keyword:smh STRING//error message SEMI
+                    | keyword:throwshade STRING//print statement SEMI
 
 
 -----lists&helpers-----
