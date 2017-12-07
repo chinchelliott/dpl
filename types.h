@@ -15,6 +15,8 @@ extern char *CLARR;
 extern char *OBRACKET;
 extern char *CBRACKET;
 extern char *END_OF_FILE;
+extern char *NEWLINE;
+
 
 
 //variables/keywords/operators
@@ -33,6 +35,7 @@ extern char *PLUS;
 extern char *MINUS;
 extern char *TIMES;
 extern char *DIVIDE;
+extern char *MODULO;
 extern char *EQ;
 extern char *NEQ;
 extern char *NEG;

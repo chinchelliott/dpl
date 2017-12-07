@@ -101,7 +101,7 @@ lambdaCall: OPAREN optArgs CPAREN //basically, optional arguments to pass to the
 
 -----comment and print statements-----
 
-comment: keyword:ME_IRL: STRING SEMI
+comment: keyword:MEIRL: *anything here SEMI
 
 utilStatements:    comment
                     | keyword:smh STRING//error message SEMI

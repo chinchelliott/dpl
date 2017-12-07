@@ -3,6 +3,7 @@
 #include <string.h>
 #include "lexer.h"
 #include "types.h"
+#include <ctype.h>
 //#include "parser.h"
 
 /*Recall that each symbol to the left of the colon is called a non-terminal.
@@ -40,6 +41,13 @@ Lexeme *lex(FILE *fp) {
             return lexeme(END_OF_FILE);
         }
 
+        if (ch=='\n') {
+            return lexeme(NEWLINE);
+        }
+        else {
+            skipWhiteSpace(fp);
+        }
+
 //TODO: Ive commented out all the ones i dont think i need...
         switch(ch)
             {
@@ -66,6 +74,16 @@ Lexeme *lex(FILE *fp) {
                 return lexeme(OBRACKET);
             case ']':
                 return lexeme(CBRACKET);
+            case '+':
+                return lexeme(PLUS);
+            case '-':
+                return lexeme(MINUS);
+            case '*':
+                return lexeme(TIMES);
+            case '/':
+                return lexeme(DIVIDE);
+            case '%':
+                return lexeme(MODULO);
 
             default:
                 // multi-character tokens
@@ -98,9 +116,10 @@ Lexeme *lexeme(char *s) {
   new->sval = NULL;
   new->ival = 0;
   new->rval = 0;
-  //new->left = NULL;
-  //new->right = NULL;
+  new->left = NULL;
+  new->right = NULL;
   //new->builtin = NULL;
+  printf("new lexeme of type %s\n", new->type);
   return new;
 }
 

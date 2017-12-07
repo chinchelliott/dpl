@@ -13,6 +13,7 @@ char *CLARR = "OPARR";
 char *OBRACKET = "OBRACKET";
 char *CBRACKET = "CBRACKET";
 char *END_OF_FILE = "END_OF_FILE";
+char *NEWLINE = "NEWLINE";
 
 
 //variables/keywords/operators
@@ -30,6 +31,7 @@ char *ELSE = "ELSE";
 char *PLUS = "PLUS";
 char *MINUS = "MINUS";
 char *TIMES = "TIMES";
+char *MODULO = "MODULO";
 char *DIVIDE = "DIVIDE";
 char *EQ = "EQ";
 char *NEQ = "NEQ";

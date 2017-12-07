@@ -63,20 +63,6 @@ Lexeme *parse(FILE *fp) {
   p->out = stdout;
   Lexeme *tree = NULL;
 
-
-  // return parse tree for evaluation
-  //return tree;
-
-  // function parse()
-  //       {
-  //       // Start symbol is expression, terminator is SEMI
-  //
-  //       advance();
-  //       expression();
-  //       match(SEMI);
-  //       }
-  // Consume Lexemes
-
   if(statementsPending(p)) {
     tree = statements(p);
   }
@@ -89,6 +75,10 @@ Lexeme *parse(FILE *fp) {
 
 int check(Parser *p, char *t) {
     return getType(p->pending) == t;
+    if (check(p,NEWLINE)) {
+        advance(p);
+        p->line +=1;
+    }
 }
 
 char *getType(Lexeme *l) {
@@ -108,6 +98,10 @@ Lexeme *match(Parser *p, char *t) {
 }
 
 void matchNoAdvance(Parser *p, char *t) {
+    // if (check(p,NEWLINE)) {
+    //     advance(p);
+    //     p->line +=1;
+    // }
   if(!check(p,t)) {
     printf("illegal\n");
     fprintf(stderr,"Syntax error\n");
@@ -249,6 +243,7 @@ Lexeme *statement(Parser *p) {
     else if (utilPending(p)) return utilStatement(p);
     else {
         a = expr(p);
+        printf("this is it 1\n");
         match(p,SEMI);
     }
 
@@ -263,6 +258,7 @@ Lexeme *expr(Parser *p) {
     if (primaryPending(p)) {
         a = primary(p);
         if(operatorPending(p)) {
+            printf("operating pending\n");
             b = operator(p);
             c = expr(p);
             b->left = a;
@@ -327,11 +323,18 @@ Lexeme *functionDefinition(Parser *p) {
     //if (check(p, ID)) {
         a->left = match(p, ID);
     //}
-    advance(p);
+    match(p,OPAREN);
     Lexeme *b = NULL; //changed from LEXEME(NIL)
-    if (paramsPending(p)) b = optParams(p);
-    advance(p);
+    if (paramsPending(p)) {
+        printf("params pending\n");
+        b = optParams(p);
+    }
+    match(p,CPAREN);
+    printf("out of that\n");
+    //advance(p);
+    printf("confused\n");
     Lexeme *c = block(p);
+    printf("confused\n");
     //TODO function's lambda here
     a->right = cons(LAMBDA, b, c);
     return a;
@@ -379,9 +382,9 @@ Lexeme *optArgs(Parser *p) {
 // loop:           keyword:STAYWOKE OPAREN expr CPAREN block		//while loop
 Lexeme *loop(Parser *p) {
     Lexeme *a = match(p,WHILE);
-    advance(p);
+    match(p, OPAREN);
     a->left = expr(p);
-    advance(p);
+    match(p, CPAREN);
     a->right = block(p);
     return a;
 }
@@ -414,8 +417,14 @@ Lexeme *elseStatement(Parser *p) {
 }
 
 Lexeme *block(Parser *p) {
-    if (statementsPending(p)) return statements(p);
-    return NULL; //changed from lexeme(NIL)
+    Lexeme *a = NULL;
+    match(p,OBRACE);
+    if (statementsPending(p)) {
+        a = statements(p);
+    }
+    match(p,CBRACE);
+    printf("confused???\n");
+    return a; //changed from lexeme(NIL)
 }
 
 Lexeme *utilStatement(Parser *p) {
@@ -537,6 +546,7 @@ Lexeme *comment(Parser *p) {
     while (!check(p,SEMI)) {
         advance(p);
     }
+    printf("this is it 2\n");
     match(p,SEMI);
     return a;
 }

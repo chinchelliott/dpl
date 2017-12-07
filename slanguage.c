@@ -9,7 +9,7 @@ int main(int argc,char **argv) {
     //     exit(-1);
     // }
 
-    FILE *fp = fopen("testfile.slang", "r");
+    FILE *fp = fopen(argv[1], "r");
 
     // Lexeme *mylex;
     //

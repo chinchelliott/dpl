@@ -24,3 +24,33 @@ clean:
 
 test:
 	./slang testfile.slang
+
+error1:
+	cat error1.txt
+
+error1x:
+	./slang error1.txt
+
+error2:
+	cat error2.txt
+
+error2x:
+	./slang error2.txt
+
+error3:
+	cat error3.txt
+
+error3x:
+	./slang error3.txt
+
+error4:
+	cat error4.txt
+
+error4x:
+	./slang error4.txt
+
+error5:
+	cat error5.txt
+
+error5x:
+	./slang error5.txt
