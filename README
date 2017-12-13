@@ -1,1 +1,66 @@
-# Slanguage
+***WELCOME TO SLANGUAGE***
+~A programming language by a millennial, for millennials (and post-millennials)~
+
+-About Slanguage
+    *Author: Elliott Miller
+    *A designer programming language written for Dr. John Lusth's CS403 Programming Languages course at the University of Alabama.
+    *Fall 2017
+
+-Description:
+    *The motivation behind Slanguage is to create a language for aspiring programmers from Generation Y and Z that uses syntax more familiar to these demographics.
+    *Slanguage is is dynamically typed language that implements the fundamentals of programming we know and love through common slang words that are easily understood and interpreted by today's pop culture.
+    *The writer behind Slanguage would like to recognize Urban Dictionary for all the helpful resources they provide that assisted in the creation of this project.
+    *Also to Dr. John Lusth, whose "scanner" class methods (skipWhiteSpace and getNextCharacter) were adapted and used in the implementation of Slanguage.
+    *NOTE: The author recognizes that fact that "slang" is in fact a "slang" word for "short language".
+    The intentions behind the name "Slanguage" was to combine the idea that this is a creative language typed with slang words and the acknowledgment that it is a programming language.
+    Slanguage is a programming language, in slang. Splanguage just didn't have the same ring to it.
+
+
+-Syntax
+    *A full, detailed grammar for Slanguage can be found in grammar.txt.
+    *A longer demonstration of example programs and code can be found in examples.txt.
+    *Some keywords found in slanguage(keywords only, not full syntactic examples):
+
+        Variable Definition:    majorkey myVar
+        Function Definition:    rickroll myFunc()
+        Array Definition:       fam myArray<*a static definition of contents*>
+        Array Indexing:         myArray[0]
+        Loop Statement:         staywoke(*predicate here*)
+        If Statement:           forreal (*predicate here*)
+        Else Statement:         ornah
+        Anonymous Function:     lambduh()
+        Mathematical Operators:
+            Addition:           thicc
+            Subtraction:        
+            Multiplication:
+            Division:
+        Boolean Operators:
+            True:
+            False:
+            Equality:
+            Not Equal:
+            Less than:
+            Greater than:
+            Logical OR:
+            Logical AND:
+            Negation:
+        Primitive Values:
+            Null or Nil:
+
+
+
+
+-Running Slanguage
+    *Like any good millennial, the author of Slanguage spent far too long on the creative aspect of this language. It was really fun.
+    *The functional aspects of Slanguage are still a work in progress.
+    *At this point in time, the functionality of the Slanguage interpreter is recognizing Slanguage code.
+    *To demonstrate Slanguage's parsing ability, there are 3 examples of programs provided containing syntax errors caught by Slanguage.
+    *There is a makefile provided to assist in the compilation of the Slanguage interpreter that contains rules to run Slanguage with these files.
+    *To run them, first build Slanguage by typing make. Execute the test files by typing make followed by the error rule you would like to run.
+    *A list of error rules and their descriptions:
+
+    error1x: A loop without a conditional
+    error2x: Defining a function with a variable keyword
+    error3x: Not termination an expression with a semi-colon
+
+    *You can run your own files to see the magical power of Slanguage. All you have to do is type dpl followed by your filename and just believe.

@@ -4,10 +4,10 @@
 int main(int argc,char **argv) {
 
 
-    // if (argc == 1) {
-    //     fprintf(stdout,"Number of commands: %d command, exiting program\n",argc);
-    //     exit(-1);
-    // }
+    if (argc == 1) {
+        fprintf(stdout,"Number of commands: %d command, no test file specified, exiting program\n",argc);
+        exit(-1);
+    }
 
     FILE *fp = fopen(argv[1], "r");
 

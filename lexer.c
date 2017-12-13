@@ -48,6 +48,7 @@ Lexeme *lex(FILE *fp) {
             skipWhiteSpace(fp);
         }
 
+
 //TODO: Ive commented out all the ones i dont think i need...
         switch(ch)
             {
@@ -119,7 +120,7 @@ Lexeme *lexeme(char *s) {
   new->left = NULL;
   new->right = NULL;
   //new->builtin = NULL;
-  printf("new lexeme of type %s\n", new->type);
+  // printf("new lexeme of type %s\n", new->type);
   return new;
 }
 
@@ -130,6 +131,7 @@ Lexeme *badLexeme(char c) {
   Lexeme *new = lexeme(BAD_LEX);
   char *bad_char = malloc(sizeof(char));
   bad_char[0] = c;
+  printf("bad lexeme found: %s", bad_char);
   new->sval = bad_char;
   return new;
 }
@@ -152,6 +154,8 @@ Lexeme *lexVar(char c,FILE *fp) {
         name[full++] = current;
         current = getNextCharacter(fp);
     }
+
+    printf("new var is %s\n", name);
 
       ungetc(current,fp);
       name[full++] = '\0';
@@ -185,10 +189,11 @@ Lexeme *lexVar(char c,FILE *fp) {
       else if(!strcmp(name,"forreal")) {
         new->type = IF;
       }
-      else if(!strcmp(name,"ORNAH")) {
+      else if(!strcmp(name,"ornah")) {
         new->type = ELSE;
       }
       else if(!strcmp(name,"thicc")) {
+         printf("PLUS FOUND\n");
         new->type = PLUS;
       }
       else if(!strcmp(name,"zonked")) {
@@ -375,7 +380,7 @@ void skipWhiteSpace(FILE *fp) {
 }
 
 int isWhiteSpace(char c) {
-    return c == ' ' || c == '\n' || c == '\r' || c == '\t';
+    return c == ' ' || c == '\r' || c == '\t';
 }
 
 //int getNextCharacter(Parser *p) {

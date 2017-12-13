@@ -1,4 +1,0 @@
-MEIRL: while loop without a condtion;
-staywoke() {
-  println("Hello!");
-}

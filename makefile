@@ -2,10 +2,10 @@ OBJS = slanguage.o lexer.o types.o parser.o
 OOPTS = -Wall -Wextra -g -std=c99 -c
 LOPTS = -Wall -Wextra -g -std=c99
 
-all: slang
+all: dpl
 
-slang: $(OBJS)
-	gcc $(LOPTS) -o slang $(OBJS)
+dpl: $(OBJS)
+	gcc $(LOPTS) -o dpl $(OBJS)
 
 slanguage.o: slanguage.c lexer.h parser.h
 	gcc $(OOPTS) slanguage.c
@@ -20,37 +20,37 @@ types.o: types.c types.h
 	gcc $(OOPTS) types.c
 
 clean:
-	rm -f $(OBJS) slang
+	rm -f $(OBJS) dpl
 
 test:
-	./slang testfile.slang
+	./dpl testfile.slang
 
 error1:
-	cat error1.txt
+	cat error1.slang
 
 error1x:
-	./slang error1.txt
+	./dpl error1.slang
 
 error2:
-	cat error2.txt
+	cat error2.slang
 
 error2x:
-	./slang error2.txt
+	./dpl error2.slang
 
 error3:
-	cat error3.txt
+	cat error3.slang
 
 error3x:
-	./slang error3.txt
+	./dpl error3.slang
 
 error4:
-	cat error4.txt
+	cat error4.slang
 
 error4x:
-	./slang error4.txt
+	./dpl error4.slang
 
 error5:
-	cat error5.txt
+	cat error5.slang
 
 error5x:
-	./slang error5.txt
+	./dpl error5.slang

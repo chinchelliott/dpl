@@ -75,10 +75,6 @@ Lexeme *parse(FILE *fp) {
 
 int check(Parser *p, char *t) {
     return getType(p->pending) == t;
-    if (check(p,NEWLINE)) {
-        advance(p);
-        p->line +=1;
-    }
 }
 
 char *getType(Lexeme *l) {
@@ -88,6 +84,10 @@ char *getType(Lexeme *l) {
 void advance(Parser *p) {
     p->previous = p->pending;
     p->pending = lex(p->fp);
+    if (check(p,NEWLINE)) {
+        advance(p);
+        p->line +=1;
+    }
 }
 
 Lexeme *match(Parser *p, char *t) {
@@ -98,10 +98,7 @@ Lexeme *match(Parser *p, char *t) {
 }
 
 void matchNoAdvance(Parser *p, char *t) {
-    // if (check(p,NEWLINE)) {
-    //     advance(p);
-    //     p->line +=1;
-    // }
+
   if(!check(p,t)) {
     printf("illegal\n");
     fprintf(stderr,"Syntax error\n");
@@ -257,8 +254,9 @@ Lexeme *expr(Parser *p) {
     Lexeme *a, *b, *c = NULL;
     if (primaryPending(p)) {
         a = primary(p);
+        printf("primary found %s ", displayLexeme(*a));
         if(operatorPending(p)) {
-            printf("operating pending\n");
+            printf("operation pending\n");
             b = operator(p);
             c = expr(p);
             b->left = a;
@@ -293,7 +291,6 @@ Lexeme *primary(Parser *p) {
 //         | functionDefinition
 //         | arrDef
 Lexeme *defExpr(Parser *p) {
-    printf("in defintion expression\n");
     if (varDefPending(p)) return varDefinition(p);
     else if (functionDefPending(p)) return functionDefinition(p);
     else return arrDefinition(p);
@@ -423,7 +420,6 @@ Lexeme *block(Parser *p) {
         a = statements(p);
     }
     match(p,CBRACE);
-    printf("confused???\n");
     return a; //changed from lexeme(NIL)
 }
 
@@ -461,12 +457,13 @@ Lexeme *booleanOp(Parser *p) {
 //         | functionCall
 //         | IDENTIFIER OBRACKET expr CBRACKET //going into arrays?
 Lexeme *idExpr(Parser *p) {
-    printf("in id expression\n");
     Lexeme *a = match(p, ID);
-    Lexeme *b = lexeme(NIL); //changed from null
+    printf("in id , %s\n",displayLexeme(*a));
+    Lexeme *b = NULL; //changed from null
     //redefinition of variable
     if (check(p,ASSIGN)) {
         match(p,ASSIGN);
+        printf("redef pending\n");
         b = expr(p);
         printf("redefinition of a variable called %s to %s\n", displayLexeme(*a), displayLexeme(*b));
         return cons(VAR, a, b);
@@ -546,7 +543,6 @@ Lexeme *comment(Parser *p) {
     while (!check(p,SEMI)) {
         advance(p);
     }
-    printf("this is it 2\n");
     match(p,SEMI);
     return a;
 }
@@ -560,7 +556,7 @@ Lexeme *comment(Parser *p) {
 //            | IDENTIFIER
 //            | keyword:LAMBDUH lambdaBody
 Lexeme *primitive(Parser *p) {
-    printf("in primitive expression\n");
+    // printf("in primitive expression\n");
     if (check(p, INTEGER)) return match(p,INTEGER);
     else if (check(p, STRING)) return match(p,STRING);
     //TODO may need to have array function though
