@@ -233,7 +233,7 @@ Lexeme *lexVar(char c,FILE *fp) {
       else if(!strcmp(name,"fam")) {
         new->type = ARRAY;
       }
-      else if(!strcmp(name,"truuu")) {
+      else if(!strcmp(name,"lusth")) {
         new->type = T;
       }
       else if(!strcmp(name,"fakenews")) {
