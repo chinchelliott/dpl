@@ -133,7 +133,7 @@ Lexeme *badLexeme(char c) {
   Lexeme *new = lexeme(BAD_LEX);
   char *bad_char = malloc(sizeof(char));
   bad_char[0] = c;
-  printf("bad lexeme found: %s", bad_char);
+//  printf("bad lexeme found: %s", bad_char);
   new->sval = bad_char;
   return new;
 }

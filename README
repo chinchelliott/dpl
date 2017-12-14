@@ -18,7 +18,7 @@
 
 -Syntax
     *A full, detailed grammar for Slanguage can be found in grammar.txt.
-    *A longer demonstration of example programs and code can be found in examples.txt.
+    *A longer demonstration of example programs and code can be found in testfile.txt, which can be run by typing make test.
     *Some keywords found in slanguage(keywords only, not full syntactic examples):
 
         Variable Definition:    majorkey myVar
@@ -64,3 +64,5 @@
     error3x: Not termination an expression with a semi-colon
 
     *You can run your own files to see the magical power of Slanguage. All you have to do is type dpl followed by your filename and just believe.
+
+	*If no error is present in a file, you should see a lovely parse tree printed out representing the compilation of your Slanguage code, before it has been evaluated. The root of the parse tree is the Lexeme that is farthest to the left. It is printed sideways because I'm no printing magician. 

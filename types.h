@@ -61,6 +61,7 @@ extern char *GLUE;
 extern char *WHILELIST;
 extern char *FUNCALL;
 extern char *ARRAYCALL;
+extern char *PRINTSTATEMENT;
 
 
 

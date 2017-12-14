@@ -264,8 +264,13 @@ Lexeme *expr(Parser *p) {
         return a;
     }
     else {
-        match(p, RETURN);
-        return expr(p);
+        a = match(p, RETURN);
+        if (check(p, OPAREN)) {
+            match(p, OPAREN);
+            a->right = expr(p);
+            match(p,CPAREN);
+        }
+        return a;
     }
 }
 
@@ -278,7 +283,7 @@ Lexeme *primary(Parser *p) {
     else if (defExprPending(p)) return defExpr(p);
     else if (idExprPending(p)) return idExpr(p);
     else {
-        match(p,LAMBDA);
+//        match(p,LAMBDA);
         return lambdaBody(p);
     }
 }
@@ -335,6 +340,7 @@ Lexeme *optParams(Parser *p) {
     a->left = NULL; //changed from lexeme(NIL)
     a->right = NULL; //changed from lexeme(NIL)
     if (commaPending(p)) {
+        match(p, COMMA);
         a->right = optParams(p);
     }
     return a;
@@ -360,7 +366,8 @@ Lexeme *optArgs(Parser *p) {
     Lexeme *a = expr(p);
     a->left = NULL; //changed from lexeme(NIL)
     a->right = NULL; //changed from lexeme(NIL)
-    if (check(p, COMMA)) {
+    if (commaPending(p)) {
+        match(p,COMMA);
         a->right = optArgs(p);
     }
     return a;
@@ -507,19 +514,27 @@ Lexeme *arrDefinition(Parser *p) {
     Lexeme *a = match(p, ARRAY);
     a->left = match(p, ID);
     match(p,OPARR);
-    match(p,CLARR);
     //Lexeme *c = NULL;
     if (exprPending(p)) {
         a->right = optArgs(p);
     }
+    match(p,CLARR);
     return a;
 }
 
 Lexeme *printStatement(Parser *p) {
-    Lexeme *a = match(p,PRINT);
-    match(p, STRING);
+    match(p,PRINT);
+    Lexeme *b = lexeme(NIL);
+    Lexeme *c = NULL;
+    c = match(p, STRING);
+    if (check(p,OPAREN)) {
+        match(p,OPAREN);
+        b = optArgs(p);
+        match(p, CPAREN);
+//        return cons(FUNCALL, b, a);
+    }
     match(p, SEMI);
-    return a;
+    return cons(PRINTSTATEMENT, c, b);
 }
 
 // comment: keyword:ME_IRL: STRING SEMI

@@ -43,7 +43,7 @@ arrDef:| keyword:FAM IDENTIFIER OPARR optArgs CLARR //array, with <> denoting co
 idExpr: IDENTIFIER
         | IDENTIFIER ASSIGN expr
         | functionCall
-        | IDENTIFIER OBRACKET expr CBRACKET //going into arrays?
+        | IDENTIFIER OBRACKET expr CBRACKET //indexing into array
 
 
 functionCall: IDENTIFIER OPAREN optArgs CPAREN
@@ -105,7 +105,7 @@ comment: keyword:MEIRL: *anything here SEMI
 
 utilStatements:    comment
                     | keyword:smh STRING//error message SEMI
-                    | keyword:throwshade STRING//print statement SEMI
+                    | keyword:throwshade STRING//print statement OPAREN optArgs CPAREN SEMI //parenthese are not necessary, if no arguments they can be left out
 
 
 -----lists&helpers-----
