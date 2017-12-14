@@ -16,6 +16,7 @@ extern char *OBRACKET;
 extern char *CBRACKET;
 extern char *END_OF_FILE;
 extern char *NEWLINE;
+extern char *COLON;
 
 
 

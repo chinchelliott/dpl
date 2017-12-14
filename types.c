@@ -14,6 +14,8 @@ char *OBRACKET = "OBRACKET";
 char *CBRACKET = "CBRACKET";
 char *END_OF_FILE = "END_OF_FILE";
 char *NEWLINE = "NEWLINE";
+char *COLON = "COLON";
+
 
 
 //variables/keywords/operators

@@ -4,12 +4,14 @@
 int main(int argc,char **argv) {
 
 
-    if (argc == 1) {
-        fprintf(stdout,"Number of commands: %d command, no test file specified, exiting program\n",argc);
-        exit(-1);
-    }
+//    if (argc == 1) {
+//        fprintf(stdout,"Number of commands: %d command, no test file specified, exiting program\n",argc);
+//        exit(-1);
+//    }
 
-    FILE *fp = fopen(argv[1], "r");
+   FILE *fp = fopen(argv[1], "r");
+//    FILE *fp = fopen("error3.slang", "r");
+
 
     // Lexeme *mylex;
     //
@@ -21,9 +23,9 @@ int main(int argc,char **argv) {
     //     mylex = lex(fp);
     // }
 
-    printf("Beginning parsing\n");
+//    printf("Beginning parsing\n");
     Lexeme *myTree = parse(fp);
-    printf("Parsing completed!\n");
+//    printf("Parsing completed!\n");
 
     displayTree(myTree,"");
 

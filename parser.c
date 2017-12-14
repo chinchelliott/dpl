@@ -214,10 +214,10 @@ int commaPending(Parser *p) {
 Lexeme *statements(Parser *p) {
     Lexeme *a,*b = lexeme(NIL); //CHANGED FROM NULL
     //NOTE make sure to never cons NULL with something, must be lexeme(NIL)
-    printf("processed first statement\n");
+//    printf("processed first statement\n");
     a = statement(p);
     if (statementsPending(p)) {
-        printf("processing more statements\n");
+//        printf("processing more statements\n");
         b = statements(p);
     }
     return cons(STATEMENTLIST,a,b);
@@ -240,7 +240,6 @@ Lexeme *statement(Parser *p) {
     else if (utilPending(p)) return utilStatement(p);
     else {
         a = expr(p);
-        printf("this is it 1\n");
         match(p,SEMI);
     }
 
@@ -254,9 +253,7 @@ Lexeme *expr(Parser *p) {
     Lexeme *a, *b, *c = NULL;
     if (primaryPending(p)) {
         a = primary(p);
-        printf("primary found %s ", displayLexeme(*a));
         if(operatorPending(p)) {
-            printf("operation pending\n");
             b = operator(p);
             c = expr(p);
             b->left = a;
@@ -277,7 +274,6 @@ Lexeme *expr(Parser *p) {
 //         | idExpr //using variables or calling functions
 //         | keyword:lambduh lambdaBody //could be defining or calling
 Lexeme *primary(Parser *p) {
-    printf("in primary\n");
     if (primitivePending(p)) return primitive(p);
     else if (defExprPending(p)) return defExpr(p);
     else if (idExprPending(p)) return idExpr(p);
@@ -300,7 +296,6 @@ Lexeme *defExpr(Parser *p) {
 // varDefintion:   keyword:MAJORKEY IDENTIFIER ASSIGN expr  //majorkey = var
 //                 | keyword:MAJORKEY IDENTIFIER
 Lexeme *varDefinition(Parser *p) {
-    printf("in variable definition");
     Lexeme *a = match(p,VAR);
     a->left = match(p,ID);
     if (assignmentPending(p)) {
@@ -323,15 +318,11 @@ Lexeme *functionDefinition(Parser *p) {
     match(p,OPAREN);
     Lexeme *b = NULL; //changed from LEXEME(NIL)
     if (paramsPending(p)) {
-        printf("params pending\n");
         b = optParams(p);
     }
     match(p,CPAREN);
-    printf("out of that\n");
     //advance(p);
-    printf("confused\n");
     Lexeme *c = block(p);
-    printf("confused\n");
     //TODO function's lambda here
     a->right = cons(LAMBDA, b, c);
     return a;
@@ -458,14 +449,11 @@ Lexeme *booleanOp(Parser *p) {
 //         | IDENTIFIER OBRACKET expr CBRACKET //going into arrays?
 Lexeme *idExpr(Parser *p) {
     Lexeme *a = match(p, ID);
-    printf("in id , %s\n",displayLexeme(*a));
     Lexeme *b = NULL; //changed from null
     //redefinition of variable
     if (check(p,ASSIGN)) {
         match(p,ASSIGN);
-        printf("redef pending\n");
         b = expr(p);
-        printf("redefinition of a variable called %s to %s\n", displayLexeme(*a), displayLexeme(*b));
         return cons(VAR, a, b);
     }
     //indexing into array, or array call

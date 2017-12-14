@@ -44,9 +44,9 @@ Lexeme *lex(FILE *fp) {
         if (ch=='\n') {
             return lexeme(NEWLINE);
         }
-        else {
-            skipWhiteSpace(fp);
-        }
+//        else {
+//            skipWhiteSpace(fp);
+//        }
 
 
 //TODO: Ive commented out all the ones i dont think i need...
@@ -85,6 +85,8 @@ Lexeme *lex(FILE *fp) {
                 return lexeme(DIVIDE);
             case '%':
                 return lexeme(MODULO);
+            case ':':
+                return lexeme(COLON);
 
             default:
                 // multi-character tokens
@@ -138,6 +140,7 @@ Lexeme *badLexeme(char c) {
 
 Lexeme *lexVar(char c,FILE *fp) {
 
+//    printf("new var char character is %c\n",c);
     int full = 1; int size = 20;
     char current;
 
@@ -146,8 +149,9 @@ Lexeme *lexVar(char c,FILE *fp) {
     name[0] = c;
 
     current = getNextCharacter(fp);
+//    printf("THIS IS THE NEXT CHARACTER %c !!!\n",current);
 
-    while((isalpha(current) || isdigit(current)) && !isWhiteSpace(current) && current != EOF) {
+    while(!isWhiteSpace(current) && (isalpha(current) || isdigit(current)) &&  current != EOF && current != '\n') {
         if(full >= size) {
           name = resize(name,&size);
         }
@@ -155,7 +159,7 @@ Lexeme *lexVar(char c,FILE *fp) {
         current = getNextCharacter(fp);
     }
 
-    printf("new var is %s\n", name);
+//    printf("new var is %s\n", name);
 
       ungetc(current,fp);
       name[full++] = '\0';
@@ -386,10 +390,11 @@ int isWhiteSpace(char c) {
 //int getNextCharacter(Parser *p) {
 char getNextCharacter(FILE *fp) {
     //int c = fgetc(p->fp);
-    //int c = fgetc(fp);
     int result;
     char x;
-    result = fscanf(fp,"%c",&x);
+    result = fgetc(fp);
+    x = result;
+//    result = fscanf(fp,"%c",&x);
     if (result == EOF)
         {
         return EOF;
