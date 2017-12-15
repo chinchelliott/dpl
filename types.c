@@ -48,6 +48,7 @@ char *F = "F";
 char *COMMENT = "COMMENT";
 char *INTEGER = "INTEGER";
 char *STRING = "STRING";
+char *REAL = "REAL";
 char *ID = "ID";
 char *BAD_LEX = "BAD_LEX";
 

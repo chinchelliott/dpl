@@ -49,6 +49,7 @@ extern char *T;
 extern char *F;
 extern char *COMMENT;
 extern char *INTEGER;
+extern char *REAL;
 extern char *STRING;
 extern char *ID;
 extern char *BAD_LEX;

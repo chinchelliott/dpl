@@ -49,6 +49,17 @@ error3:
 error3x:
 	./dpl error3.slang
 
+error4:
+	cat error4.slang
+
+error4x:
+	dpl error4.slang
+
+error5:
+	cat error5.slang
+
+error5x:
+	dpl error5.slang
 arrays:
 	cat arrays.slang
 

@@ -257,11 +257,11 @@ Lexeme *lexNumber(char c, FILE *fp) {
   int filled = 1, size = 16;
   char n;
   char *num = malloc(sizeof(char) * size);
-  Lexeme *new = lexeme(INTEGER);
   num[0] = c;
   n = getNextCharacter(fp);
-
+    
   while(isdigit(n) && !isWhiteSpace(n) && n != EOF) {
+    
     if(filled >= size) {
       num = resize(num,&size);
     }
@@ -270,8 +270,18 @@ Lexeme *lexNumber(char c, FILE *fp) {
   }
   ungetc(n,fp);
   num[filled++] = '\0';
-  new->ival = atoi(num);
-  new->sval = num;
+    Lexeme *new;
+
+//    if (dflag == 1) {
+//        new = lexeme(REAL);
+//        new->rval = atof(num);
+//        new->sval = num;
+//    }
+//    else {
+	new = lexeme(INTEGER);
+ 	 new->ival = atoi(num);
+  	new->sval = num;
+//    }
 
   return new;
 }
