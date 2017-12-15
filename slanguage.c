@@ -2,6 +2,7 @@
 #include "parser.h"
 #include "env.h"
 #include "types.h"
+#include "eval.h"
 
 int main(int argc,char **argv) {
 
@@ -19,6 +20,11 @@ int main(int argc,char **argv) {
     Lexeme *myTree = parse(fp);
 //
     displayTree(myTree,"");
+    
+	Lexeme *global = createEnv();
+    eval(myTree, global);
+    displayEnv(global);
+
 
 //
 //    printf("Creating a new environment\n");

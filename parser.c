@@ -52,6 +52,8 @@ Lexeme *idExpr(Parser *p);
 Lexeme *lambdaBody(Parser *p);
 Lexeme *arrDefinition(Parser *p);
 Lexeme *printStatement(Parser *p);
+Lexeme *params(Parser *p);
+Lexeme *args(Parser *p);
 
 Lexeme *parse(FILE *fp) {
   // allocate space for parser struct
@@ -188,7 +190,7 @@ int assignmentPending(Parser *p) {
 }
 
 int operatorPending(Parser *p) {
-    return check(p, PLUS) || check(p, MINUS) || check(p, TIMES) || check(p, DIVIDE) || booleanOpPending(p);
+    return check(p, PLUS) || check(p, MINUS) || check(p, TIMES) || check(p, DIVIDE) || check(p,ASSIGN) || booleanOpPending(p);
 }
 
 int booleanOpPending(Parser *p) {
@@ -303,10 +305,10 @@ Lexeme *defExpr(Parser *p) {
 Lexeme *varDefinition(Parser *p) {
     Lexeme *a = match(p,VAR);
     a->left = match(p,ID);
-    if (assignmentPending(p)) {
-        advance(p);
-        a->right = expr(p);
-    }
+    //if (assignmentPending(p)) {
+    match(p,ASSIGN);
+    a->right = expr(p);
+   //}
     // else {
     //     a->right = lexeme(NIL);
     // } SHOULDNT NEED THIS
@@ -336,6 +338,23 @@ Lexeme *functionDefinition(Parser *p) {
 // optParams:  *EMPTY*
 //             | params
 Lexeme *optParams(Parser *p) {
+    if (paramsPending(p)) {
+        return params(p);
+    }
+    else {
+        return NULL;
+    }
+//    Lexeme *a = match(p, ID);
+//    a->left = NULL; //changed from lexeme(NIL)
+//    a->right = NULL; //changed from lexeme(NIL)
+//    if (commaPending(p)) {
+//        match(p, COMMA);
+//        a->right = optParams(p);
+//    }
+//    return a;
+}
+
+Lexeme *params(Parser *p) {
     Lexeme *a = match(p, ID);
     a->left = NULL; //changed from lexeme(NIL)
     a->right = NULL; //changed from lexeme(NIL)
@@ -363,14 +382,29 @@ Lexeme *functionCall(Parser *p) {
 }
 
 Lexeme *optArgs(Parser *p) {
+    if (exprPending(p)) {
+        return args(p);
+    }
+    else {
+        return NULL;
+    }
+//    Lexeme *a = expr(p);
+//    a->left = NULL; //changed from lexeme(NIL)
+//    a->right = NULL; //changed from lexeme(NIL)
+//    if (commaPending(p)) {
+//        match(p,COMMA);
+//        a->right = optArgs(p);
+//    }
+//    return a;
+}
+
+Lexeme *args(Parser *p) {
     Lexeme *a = expr(p);
-    a->left = NULL; //changed from lexeme(NIL)
-    a->right = NULL; //changed from lexeme(NIL)
     if (commaPending(p)) {
         match(p,COMMA);
-        a->right = optArgs(p);
+        return cons(GLUE, a, args(p));
     }
-    return a;
+    return cons(GLUE, a, NULL);
 }
 
 
@@ -434,6 +468,7 @@ Lexeme *operator(Parser *p) {
     else if (check(p, MINUS)) return match(p, MINUS);
     else if (check(p, TIMES)) return match(p, TIMES);
     else if (check(p, DIVIDE)) return match(p, DIVIDE);
+    else if (check(p, ASSIGN)) return match(p, ASSIGN);
     else {
         return booleanOp(p);
     }
@@ -457,11 +492,11 @@ Lexeme *idExpr(Parser *p) {
     Lexeme *a = match(p, ID);
     Lexeme *b = NULL; //changed from null
     //redefinition of variable
-    if (check(p,ASSIGN)) {
-        match(p,ASSIGN);
-        b = expr(p);
-        return cons(VAR, a, b);
-    }
+//    if (check(p,ASSIGN)) {
+//        match(p,ASSIGN);
+//        b = expr(p);
+//        return cons(VAR, a, b);
+//    }
     //indexing into array, or array call
     if (check(p,OBRACKET)) {
         match(p,OBRACKET);
@@ -523,9 +558,9 @@ Lexeme *arrDefinition(Parser *p) {
 
 Lexeme *printStatement(Parser *p) {
     match(p,PRINT);
-    Lexeme *b = lexeme(NIL);
+    Lexeme *b = NULL;
     Lexeme *c = NULL;
-    c = match(p, STRING);
+//    c = match(p, STRING);
     if (check(p,OPAREN)) {
         match(p,OPAREN);
         b = optArgs(p);
@@ -533,7 +568,7 @@ Lexeme *printStatement(Parser *p) {
 //        return cons(FUNCALL, b, a);
     }
     match(p, SEMI);
-    return cons(PRINTSTATEMENT, c, b);
+    return cons(PRINTSTATEMENT, b, c);
 }
 
 // comment: keyword:ME_IRL: STRING SEMI
