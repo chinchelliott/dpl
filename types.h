@@ -55,6 +55,9 @@ extern char *BAD_LEX;
 
 
 //GLUE
+extern char *ENV;
+extern char *VALUELIST;
+extern char *CLOSURE;
 extern char *STATEMENTLIST;
 extern char *IFLIST;
 extern char *GLUE;

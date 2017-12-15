@@ -26,8 +26,8 @@ Lexeme *lexeme(char *);
 Lexeme *cons(char *,Lexeme *, Lexeme *);
 Lexeme *car(Lexeme *);
 Lexeme *cdr(Lexeme *);
-// void setCar(Lexeme *, Lexeme *);
-// void setCdr(Lexeme *, Lexeme *);
+ void setCar(Lexeme *, Lexeme *);
+ void setCdr(Lexeme *, Lexeme *);
 char *displayLexeme(Lexeme);
 // char *display(Lexeme *);
 

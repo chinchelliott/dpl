@@ -53,6 +53,9 @@ char *BAD_LEX = "BAD_LEX";
 
 
 //GLUE KEYWORDS
+char *ENV = "ENV";
+char *VALUELIST = "VALUELIST";
+char *CLOSURE = "CLOSURE";
 char *STATEMENTLIST = "STATEMENTLIST";
 char *IFLIST = "IFLIST";
 char *GLUE = "GLUE";

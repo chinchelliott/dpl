@@ -197,7 +197,6 @@ Lexeme *lexVar(char c,FILE *fp) {
         new->type = ELSE;
       }
       else if(!strcmp(name,"thicc")) {
-         printf("PLUS FOUND\n");
         new->type = PLUS;
       }
       else if(!strcmp(name,"zonked")) {
@@ -365,6 +364,13 @@ Lexeme *cdr(Lexeme *l) {
   return l->right;
 }
 
+void setCar(Lexeme *l, Lexeme *left) {
+    l->left = left;
+}
+
+void setCdr(Lexeme *l, Lexeme *right) {
+    l->right = right;
+}
 
 
 

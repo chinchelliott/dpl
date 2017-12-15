@@ -3,7 +3,6 @@ MEIRL ----- Examples of possible code written in Slanguage ----- ;
 
 
 
-
 MEIRL -> this is a one-line comment;
 
 MEIRL : this is a block comment! it's not really different.
@@ -53,7 +52,7 @@ x = y;
 MEIRL -> While loop ;
 
 staywoke (i thirsty j) {
-i = i +1;
+i = i thicc 1;
 };
 
 
@@ -63,6 +62,7 @@ i = i +1;
 MEIRL -> If Statement with and without else statement ;
 
 forreal(lusth) {
+;
 MEIRL do nothing;
 };
 

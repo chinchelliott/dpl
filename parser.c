@@ -386,11 +386,10 @@ Lexeme *loop(Parser *p) {
 
 // ifStatement: keyword:FORREAL OPAREN expr CPAREN block optElse
 Lexeme *ifStatement(Parser *p) {
-    Lexeme *temp;
     Lexeme *a = match(p,IF);
-    temp = match(p,OPAREN);
+    match(p,OPAREN);
     a->left = expr(p);
-    temp = match(p,CPAREN);
+    match(p,CPAREN);
     Lexeme *b,*c = NULL;
     b = block(p);
     if (elsePending(p)) {

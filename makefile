@@ -1,4 +1,4 @@
-OBJS = slanguage.o lexer.o types.o parser.o
+OBJS = slanguage.o lexer.o types.o parser.o env.o
 OOPTS = -Wall -Wextra -g -std=c99 -c
 LOPTS = -Wall -Wextra -g -std=c99
 
@@ -7,7 +7,7 @@ all: dpl
 dpl: $(OBJS)
 	gcc $(LOPTS) -o dpl $(OBJS)
 
-slanguage.o: slanguage.c lexer.h parser.h
+slanguage.o: slanguage.c lexer.h parser.h env.h types.h
 	gcc $(OOPTS) slanguage.c
 
 lexer.o: lexer.c lexer.h types.h
@@ -18,6 +18,9 @@ parser.o: parser.c parser.h types.h
 
 types.o: types.c types.h
 	gcc $(OOPTS) types.c
+
+env.o: env.c env.h types.h parser.h lexer.h
+	gcc $(OOPTS) env.c
 
 clean:
 	rm -f $(OBJS) dpl
@@ -43,14 +46,33 @@ error3:
 error3x:
 	./dpl error3.slang
 
-error4:
-	cat error4.slang
+arrays:
+	cat arrays.slang
 
-error4x:
-	./dpl error4.slang
+arraysx:
+	./dpl arrays.slang
 
-error5:
-	cat error5.slang
+conditionals:
+	cat conditionals.slang
 
-error5x:
-	./dpl error5.slang
+conditionalsx:
+	./dpl conditionals.slang
+
+recursion:
+	cat recursion.slang
+
+recursionx:
+	./dpl recursion.slang
+
+lambda:
+	cat lambda.slang
+
+lambdax:
+	./dpl lambda.slang
+
+problem:
+	cat testfile.slang
+
+problemx:
+	./dpl testfile.slang
+

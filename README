@@ -53,7 +53,7 @@
 -Running Slanguage
     *Like any good millennial, the author of Slanguage spent far too long on the creative aspect of this language. It was really fun.
     *The functional aspects of Slanguage are still a work in progress.
-    *At this point in time, the functionality of the Slanguage interpreter is recognizing Slanguage code.
+    !!! ***->At this point in time, the functionality of the Slanguage interpreter is recognizing Slanguage code. !!!
     *To demonstrate Slanguage's parsing ability, there are 3 examples of programs provided containing syntax errors caught by Slanguage.
     *There is a makefile provided to assist in the compilation of the Slanguage interpreter that contains rules to run Slanguage with these files.
     *To run them, first build Slanguage by typing make. Execute the test files by typing make followed by the error rule you would like to run.
@@ -65,4 +65,4 @@
 
     *You can run your own files to see the magical power of Slanguage. All you have to do is type dpl followed by your filename and just believe.
 
-	*If no error is present in a file, you should see a lovely parse tree printed out representing the compilation of your Slanguage code, before it has been evaluated. The root of the parse tree is the Lexeme that is farthest to the left. It is printed sideways because I'm no printing magician. 
+	*If no error is present in a file, you will see a lovely parse tree printed out representing the compilation of your Slanguage code, before it has been evaluated. The root of the parse tree is the Lexeme that is farthest to the left. It is printed sideways because I'm no printing magician. 
